@@ -85,11 +85,21 @@ trait RevisionableTrait
         });
     }
 
+    /**
+     * Returns strings, indicates revisionable_type value
+     *
+     * @return string
+     */
     public function revisionableClass()
     {
         return $this->getMorphClass();
     }
 
+    /**
+     * Returns strings, indicates revisionable_type value for static calls
+     *
+     * @return string
+     */
     public static function revisionableClassStatic()
     {
         return get_called_class();

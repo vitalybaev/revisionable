@@ -82,6 +82,11 @@ class Revisionable extends Eloquent
         return $this->morphMany('\Venturecraft\Revisionable\Revision', 'revisionable');
     }
 
+    /**
+     * Returns strings, indicates revisionable_type value
+     *
+     * @return string
+     */
     public function revisionableClass()
     {
         return $this->getMorphClass();
