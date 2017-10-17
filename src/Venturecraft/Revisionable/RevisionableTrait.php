@@ -86,6 +86,26 @@ trait RevisionableTrait
     }
 
     /**
+     * Returns strings, indicates revisionable_type value
+     *
+     * @return string
+     */
+    public function revisionableClass()
+    {
+        return $this->getMorphClass();
+    }
+
+    /**
+     * Returns strings, indicates revisionable_type value for static calls
+     *
+     * @return string
+     */
+    public static function revisionableClassStatic()
+    {
+        return get_called_class();
+    }
+
+    /**
      * @return mixed
      */
     public function revisionHistory()
@@ -102,7 +122,7 @@ trait RevisionableTrait
      */
     public static function classRevisionHistory($limit = 100, $order = 'desc')
     {
-        return \Venturecraft\Revisionable\Revision::where('revisionable_type', get_called_class())
+        return \Venturecraft\Revisionable\Revision::where('revisionable_type', static::revisionableClassStatic())
             ->orderBy('updated_at', $order)->limit($limit)->get();
     }
 
@@ -176,7 +196,7 @@ trait RevisionableTrait
 
             foreach ($changes_to_record as $key => $change) {
                 $revisions[] = array(
-                    'revisionable_type' => $this->getMorphClass(),
+                    'revisionable_type' => $this->revisionableClass(),
                     'revisionable_id' => $this->getKey(),
                     'key' => $key,
                     'old_value' => array_get($this->originalData, $key),
@@ -218,7 +238,7 @@ trait RevisionableTrait
         if ((!isset($this->revisionEnabled) || $this->revisionEnabled))
         {
             $revisions[] = array(
-                'revisionable_type' => $this->getMorphClass(),
+                'revisionable_type' => $this->revisionableClass(),
                 'revisionable_id' => $this->getKey(),
                 'key' => self::CREATED_AT,
                 'old_value' => null,
@@ -245,7 +265,7 @@ trait RevisionableTrait
             && $this->isRevisionable($this->getDeletedAtColumn())
         ) {
             $revisions[] = array(
-                'revisionable_type' => $this->getMorphClass(),
+                'revisionable_type' => $this->revisionableClass(),
                 'revisionable_id' => $this->getKey(),
                 'key' => $this->getDeletedAtColumn(),
                 'old_value' => null,
