@@ -82,6 +82,11 @@ class Revisionable extends Eloquent
         return $this->morphMany('\Venturecraft\Revisionable\Revision', 'revisionable');
     }
 
+    public function revisionableClass()
+    {
+        return $this->getMorphClass();
+    }
+
     /**
      * Invoked before a model is saved. Return false to abort the operation.
      *
@@ -141,7 +146,7 @@ class Revisionable extends Eloquent
 
             foreach ($changes_to_record as $key => $change) {
                 $revisions[] = array(
-                    'revisionable_type'     => $this->getMorphClass(),
+                    'revisionable_type'     => $this->revisionableClass(),
                     'revisionable_id'       => $this->getKey(),
                     'key'                   => $key,
                     'old_value'             => array_get($this->originalData, $key),
@@ -176,7 +181,7 @@ class Revisionable extends Eloquent
         if ((!isset($this->revisionEnabled) || $this->revisionEnabled))
         {
             $revisions[] = array(
-                'revisionable_type' => $this->getMorphClass(),
+                'revisionable_type' => $this->revisionableClass(),
                 'revisionable_id' => $this->getKey(),
                 'key' => self::CREATED_AT,
                 'old_value' => null,
@@ -201,7 +206,7 @@ class Revisionable extends Eloquent
             && $this->isSoftDelete()
             && $this->isRevisionable($this->getDeletedAtColumn())) {
             $revisions[] = array(
-                'revisionable_type' => $this->getMorphClass(),
+                'revisionable_type' => $this->revisionableClass(),
                 'revisionable_id' => $this->getKey(),
                 'key' => $this->getDeletedAtColumn(),
                 'old_value' => null,
